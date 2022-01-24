@@ -12,6 +12,7 @@
 // Constantes
 #define BUFF_SIZE 64
 #define MILLION 1000000L
+#define UNUSED(x) (void)(x)
 
 // UI
 const char msg_welcome[] = "Bienvenue sur le Shell de l'ENSEA\nPour quitter, tapez 'exit'\n";
@@ -24,6 +25,9 @@ const char inp_exit[] = "exit";
 const char space[] = " ";
 
 int main(int argc, char *argv[]){
+
+    UNUSED(argc);
+    UNUSED(argv);
 
     char buff[BUFF_SIZE]; // Buffer d'input
     char buff_com[BUFF_SIZE] = ""; // Buffer pour stocker la commande 

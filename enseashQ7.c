@@ -12,6 +12,8 @@
 // Constantes
 #define BUFF_SIZE 64
 #define MILLION 1000000L
+#define UNUSED(x) (void)(x)
+
 
 // UI
 const char msg_welcome[] = "Bienvenue sur le Shell de l'ENSEA\nPour quitter, tapez 'exit'\n";
@@ -32,18 +34,48 @@ const char space[] = " ";
 const char rb[] = ">";
 const char lb[] = "<";
 
+// Fonction d'affichage du retour
+void commStatus(int s, int ms, int signal){
+
+    char stat[20]; // Stockage du retour
+    char stat_buff[10]; // Stockage des nombres
+
+    // choix entre [exit et [sign
+    if (signal == 0) {strcat(stat,stat_exit);}
+    else {strcat(stat,stat_sign);}
+    // Ajout du numéro du signal
+    sprintf(stat_buff,"%d",signal);
+    strcat(stat,stat_buff);
+
+    strcat(stat,stat_sep);
+
+    if (s > 0) { // Si le temps est > 1s
+        sprintf(stat_buff,"%d",s);
+        strcat(stat,stat_buff);
+        strcat(stat,stat_fins);
+    }
+    else { // Temps en ms
+        sprintf(stat_buff,"%d",ms);
+        strcat(stat,stat_buff);
+        strcat(stat,stat_finms);
+    }
+    write(STDOUT_FILENO,stat,strlen(stat));
+}
+
 int main(int argc, char *argv[]){
+
+    UNUSED(argc);
+    UNUSED(argv);
 
     char buff[BUFF_SIZE]; // Buffer d'input
     char buff_com[BUFF_SIZE] = ""; // Buffer pour stocker la commande 
     char **buff_arg; // Buffer pour stokcer les arguments
 
-    int ret,status,signal,s,ms,i,j,k,espaces; // Retour write / status et signal du pid / temps en s et ls / Compteur / nombre d'espaces
+    int ret,status,signal,s,ms,i,j; // Retour write / status et signal du pid / temps en s et ls / Compteur / nombre d'espaces
     int where_rb; // Position du >
     int where_lb; // postiion du <
     int i_free; // Compteur de free()
 
-    double time; // temps réel
     struct timespec start, stop; // Points temporels pour avoir le delta
     char *ptr; // Pointeur pour trier buff
 
@@ -134,32 +166,3 @@ while(1){
         free(buff_arg);
     }
 }
-// Fonction d'affichage du retour
-void commStatus(int s, int ms, int signal){
-
-    char stat[20]; // Stockage du retour
-    char stat_buff[10]; // Stockage des nombres
-
-    // choix entre [exit et [sign
-    if (signal == 0) {strcat(stat,stat_exit);}
-    else {strcat(stat,stat_sign);}
-    // Ajout du numéro du signal
-    sprintf(stat_buff,"%d",signal);
-    strcat(stat,stat_buff);
-
-    strcat(stat,stat_sep);
-
-    if (s > 0) { // Si le temps est > 1s
-        sprintf(stat_buff,"%d",s);
-        strcat(stat,stat_buff);
-        strcat(stat,stat_fins);
-    }
-    else { // Temps en ms
-        sprintf(stat_buff,"%d",ms);
-        strcat(stat,stat_buff);
-        strcat(stat,stat_finms);
-    }
-    write(STDOUT_FILENO,stat,strlen(stat));
-}
-
-// PS pour les caractères qui apparaissent avant [exit..., je n'ai pas su trouver un fix, le code est fonctionnel avec, simplement moche.
